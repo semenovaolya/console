@@ -34,8 +34,9 @@ class ConsoleInput implements InputInterface
     public function __construct(?array $argv = null)
     {
         $argv ??= $_SERVER['argv'] ?? [];
+        array_shift($argv);
 
-        while (null !== $token = array_shift($argv)) {
+        if (!empty($argv)) {
             $this->parse($argv);
         }
     }

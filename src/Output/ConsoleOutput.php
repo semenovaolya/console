@@ -22,15 +22,4 @@ class ConsoleOutput implements OutputInterface
     {
         echo $message . PHP_EOL;
     }
-
-    /**
-     * Выводит ошибку в консоль
-     * 
-     * @param string $message
-     * @return void
-     */
-    public function error(string $message): void
-    {
-        file_put_contents('php://stderr', $message . PHP_EOL);
-    }
 }
