@@ -1,0 +1,21 @@
+{
+  "name": "semenovaolya/console",
+  "description": "A library that provides input-output (I/O) processing when working in the console with the ability to implement its own commands",
+  "type": "library",
+  "require": {
+    "php": "^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Console\\": "src/"
+    }
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Semenova Olga",
+      "email": "ossemenova51@email.com"
+    }
+  ],
+  "minimum-stability": "stable"
+}
