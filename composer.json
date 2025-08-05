@@ -17,5 +17,6 @@
       "email": "ossemenova51@email.com"
     }
   ],
-  "minimum-stability": "stable"
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
