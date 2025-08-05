@@ -42,6 +42,7 @@ class Application
 
         try {
             $command = $this->getCommand($input);
+            $command->setApplication($this);
             $command->execute($input, $output);
         } catch (\Throwable $e) {
             $output->writeLine("Error: " . $e->getMessage());

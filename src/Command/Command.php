@@ -33,11 +33,7 @@ abstract class Command implements CommandInterface
      */
     private string $description = '';
 
-    /**
-     * Конфигурирует текущую команду
-     * 
-     * @return void
-     */
+    private ?Application $application = null;
 
     /**
      * Устанавливает конфигурацию команды (name, descriprtion, help)
@@ -57,11 +53,22 @@ abstract class Command implements CommandInterface
     }
 
     /**
+     * Устанавливает экземпляр приложения для этой команды
+     * 
+     * @param Application|null $application
+     * @return void
+     */
+    public function setApplication(?Application $application): void
+    {
+        $this->application = $application;
+    }
+
+    /**
      * Возвращает экземпляр приложения для этой команды
      * 
-     * @return Application
+     * @return Application|null
      */
-    public function getApplication(): Application
+    public function getApplication(): ?Application
     {
         return $this->application;
     }
