@@ -4,68 +4,60 @@ namespace Console\Command;
 
 use Console\Output\OutputInterface;
 use Console\Input\InputInterface;
+
 /**
- * Отображает справку по команде
+ * Выводит список доступных команд
  */
 class ListCommand extends Command
 {
-    private Command $command;
-
+    /**
+     * {@inheritdoc}
+     */
     protected function configure(): void
     {
         $this
             ->setName('list')
-            ->setDescription('List commands')
-            //Arguments:\n  {command} - Command name to show help for
-            ->setHelp(<<<'EOF'
-The <info>%command.name%</info> command displays help for a given command:
+            ->setDescription('List all registered commands')
+            ->setHelp(<<<HELP
+List Command
+Displays all available commands in the application
 
-  <info>%command.full_name% list</info>
+Usage:
+  list
 
-You can also output the help in other formats by using the <comment>--format</comment> option:
+Examples:
+  list               Show all available commands
 
-  <info>%command.full_name% --format=xml list</info>
-
-To display the list of available commands, please use the <info>list</info> command.
-EOF
-            )
-        ;
+Description:
+  This command provides a complete list of all registered commands
+  in the application along with their short descriptions.
+HELP
+            );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function execute(InputInterface $input, OutputInterface $output): void
     {
-        $commandName = $input->getCommandName();
+        $commands = $this->getApplication()->getCommands();
 
-        if ($commandName && $this->registry->hasCommand($commandName)) {
-            $this->showCommandHelp($commandName, $output);
+        if (empty($commands)) {
+            $output->writeLine("Not available commands");
         } else {
-            $this->showGlobalHelp($output);
+            $output->writeLine("Available commands:");
+            $output->writeLine("");
+
+            // Определяем максимальную длину имени команды для красивого выравнивания
+            $maxLength = max(array_map('strlen', array_keys($commands))) + 2;
+
+            foreach ($commands as $command) {
+                $output->writeLine(sprintf(
+                    "  %-{$maxLength}s %s",
+                    $command->getName(),
+                    $command->getDescription()
+                ));
+            }
         }
-    }
-
-    private function showCommandHelp(string $commandName, OutputInterface $output): void
-    {
-        $command = $this->registry->getCommand($commandName);
-
-        $output->writeLine("Description: " . $command->getDescription());
-        $output->writeLine("");
-        $output->writeLine("Usage: " . $command->getName() . " [arguments] [parameters]");
-        $output->writeLine("");
-        $output->writeLine($command->getHelp());
-    }
-
-    private function showGlobalHelp(OutputInterface $output): void
-    {
-        $output->writeLine("Available commands:");
-
-        foreach ($this->registry->getCommands() as $command) {
-            $output->writeLine(sprintf(
-                "  %-15s %s",
-                $command->getName(),
-                $command->getDescription()
-            ));
-        }
-
-        $output->writeLine("\nUse {help} with any command to see command details");
     }
 }

@@ -28,26 +28,11 @@ interface InputInterface
      */
     public function getParameters(): array;
 
-    //todo
     /**
-     * Возвращает значение true, если объект InputArgument существует по имени или позиции.
+     * Проверяет наличие аргумента
      *
      * @param string $name
      * @return bool
      */
     public function hasArgument(string $name): bool;
-
-    /**
-     *
-     *  Returns the argument value for a given argument name.
-     *
-     * @throws InvalidArgumentException When argument given doesn't exist
-     *
-     * @param string $name
-     * @param $default
-     * @return mixed
-     */
-    public function getArgument(string $name): mixed;
-    public function hasParameter(string $name): bool;
-    public function getParameter(string $name, $default = null);
 }

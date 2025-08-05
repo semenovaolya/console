@@ -7,8 +7,25 @@ namespace Console\Input;
  */
 class ConsoleInput implements InputInterface
 {
-    private ?string $commandName;
+    /**
+     * Распарсенное название команды
+     *
+     * @var string|null
+     */
+    private ?string $commandName = '';
+
+    /**
+     * Распарсенные аргументы
+     *
+     * @var array
+     */
     private array $arguments = [];
+
+    /**
+     * Распрасенные параметры
+     *
+     * @var array
+     */
     private array $parameters = [];
 
     /**
@@ -18,16 +35,18 @@ class ConsoleInput implements InputInterface
     {
         $argv ??= $_SERVER['argv'] ?? [];
 
-        $this->parse($argv);
+        while (null !== $token = array_shift($argv)) {
+            $this->parse($argv);
+        }
     }
 
     /**
      * Парсит и разбирает входные данные на аргументы и параметры
      *
      * @param array $tokens
-     * @return array
+     * @return void
      */
-    public function parse(array $tokens): array
+    public function parse(array $tokens): void
     {
         foreach ($tokens as $token) {
             $token = trim($token);
@@ -41,8 +60,7 @@ class ConsoleInput implements InputInterface
             } elseif (str_starts_with($token, '[') && str_ends_with($token, ']')) {
                 $this->parseParameter($token);
             } else {
-                // Одиночный аргумент без скобок
-                $this->arguments[] = $token;
+                $this->commandName = $token;
             }
         }
     }
@@ -114,9 +132,7 @@ class ConsoleInput implements InputInterface
     }
 
     /**
-     * Возвращает название команты
-     *
-     * @return string|null
+     * {@inheritdoc}
      */
     public function getCommandName(): ?string
     {
@@ -124,9 +140,7 @@ class ConsoleInput implements InputInterface
     }
 
     /**
-     * Возвращает аргументы
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getArguments(): array
     {
@@ -134,38 +148,18 @@ class ConsoleInput implements InputInterface
     }
 
     /**
-     * Возвращает параметры
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getParameters(): array
     {
         return $this->parameters;
     }
-
+    
     /**
-     * Возвращает флаг наличия команды в запросе
-     *
-     * @param string $name
-     * @return bool
+     * {@inheritdoc}
      */
     public function hasArgument(string $name): bool
     {
         return in_array($name, $this->arguments);
-    }
-
-    public function getArgument(string $name, $default = null)
-    {
-        return $this->arguments[$name] ?? $default;
-    }
-
-    public function hasParameter(string $name): bool
-    {
-        return array_key_exists($name, $this->parameters);
-    }
-
-    public function getParameter(string $name, $default = null)
-    {
-        return $this->parameters[$name] ?? $default;
     }
 }
